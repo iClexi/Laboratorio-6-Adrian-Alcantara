@@ -1,0 +1,15 @@
+sudo apt update
+sudo apt install gnupg2 -y
+
+mkdir ~/cifrado
+cd ~/cifrado
+echo "Este es un archivo confidencial para la práctica de GPG." > secreto.txt
+cat secreto.txt
+
+gpg --full-generate-key
+gpg --list-keys
+gpg -e -r 20250845@itla.edu.do secreto.txt
+cat secreto.txt.gpg
+gpg -d secreto.txt.gpg
+gpg -o secretodes.txt -d secreto.txt.gpg
+cat secretodes.txt
