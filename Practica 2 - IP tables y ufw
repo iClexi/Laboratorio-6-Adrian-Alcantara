@@ -1,0 +1,27 @@
+sudo apt update
+sudo apt install -y apache2 vsftpd openssh-server
+sudo systemctl enable --now apache2 vsftpd ssh
+sudo ss -tlnp | grep -E ':80 |:21 |:22 '
+
+sudo iptables -F INPUT
+
+sudo iptables -A INPUT -p tcp --dport 80  -j DROP
+sudo iptables -A INPUT -p tcp --dport 21  -j DROP
+sudo iptables -I INPUT 1 -p tcp --dport 22  -j DROP
+sudo iptables -L INPUT -v -n --line-numbers
+
+sudo iptables -D INPUT 1
+sudo iptables -D INPUT 1
+sudo iptables -D INPUT 1
+
+sudo iptables -F INPUT
+sudo iptables -F FORWARD
+sudo iptables -F OUTPUT
+sudo iptables -X
+
+sudo ufw reset
+sudo ufw enable
+sudo ufw deny 80/tcp
+sudo ufw deny 21/tcp
+sudo ufw deny 22/tcp
+sudo ufw status numbered
