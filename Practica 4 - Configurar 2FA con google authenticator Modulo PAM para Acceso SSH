@@ -1,16 +1,31 @@
-sudo apt install libpam-google-authenticator -y
+# Instalar módulo de Google Authenticator para PAM
+sudo apt install -y libpam-google-authenticator
+
+# Generar configuración de 2FA para el usuario
 sudo -i -u michael20250845
 google-authenticator
-y
-y
-y
-y
+# Responder todo con 'y' para permitir:
+# - Actualizar configuración
+# - Evitar reuso de códigos
+# - Limitar intentos
+# - Guardar configuración
+# - Habilitar rate limiting
+exit
+
+# Editar PAM de SSH para usar Google Authenticator
 sudo nano /etc/pam.d/sshd
+# Agregar al inicio:
 auth required pam_google_authenticator.so nullok
+
+# Editar configuración de SSH
 sudo nano /etc/ssh/sshd_config
+# Asegurar estas líneas:
 UsePAM yes
 PasswordAuthentication yes
 ChallengeResponseAuthentication yes
 
+# Reiniciar servicio SSH para aplicar cambios
 sudo systemctl restart sshd
+
+# Probar conexión SSH (te pedirá password y luego código 2FA)
 ssh michael20250845@10.0.0.200
