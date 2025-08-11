@@ -1,27 +1,45 @@
+# Instalar Apache, FTP y SSH
 sudo apt update
 sudo apt install -y apache2 vsftpd openssh-server
+
+# Habilitar e iniciar servicios
 sudo systemctl enable --now apache2 vsftpd ssh
+
+# Verificar que están escuchando en puertos 80, 21 y 22
 sudo ss -tlnp | grep -E ':80 |:21 |:22 '
 
+# --- Reglas con iptables ---
+# Limpiar reglas previas
 sudo iptables -F INPUT
 
-sudo iptables -A INPUT -p tcp --dport 80  -j DROP
-sudo iptables -A INPUT -p tcp --dport 21  -j DROP
-sudo iptables -I INPUT 1 -p tcp --dport 22  -j DROP
+# Bloquear HTTP (80), FTP (21) y SSH (22)
+sudo iptables -A INPUT -p tcp --dport 80 -j DROP
+sudo iptables -A INPUT -p tcp --dport 21 -j DROP
+sudo iptables -I INPUT 1 -p tcp --dport 22 -j DROP
+
+# Ver reglas activas con número de línea
 sudo iptables -L INPUT -v -n --line-numbers
 
+# Eliminar las 3 reglas (una por una desde la línea 1)
 sudo iptables -D INPUT 1
 sudo iptables -D INPUT 1
 sudo iptables -D INPUT 1
 
+# Limpiar todas las cadenas y reglas
 sudo iptables -F INPUT
 sudo iptables -F FORWARD
 sudo iptables -F OUTPUT
 sudo iptables -X
 
+# --- Reglas con UFW ---
 sudo ufw reset
 sudo ufw enable
+
+# Denegar HTTP, FTP y SSH
 sudo ufw deny 80/tcp
 sudo ufw deny 21/tcp
 sudo ufw deny 22/tcp
+
+# Ver estado y reglas con número
 sudo ufw status numbered
+
