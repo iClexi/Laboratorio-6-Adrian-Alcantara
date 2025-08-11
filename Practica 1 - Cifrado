@@ -1,15 +1,28 @@
+# Instalar GnuPG
 sudo apt update
-sudo apt install gnupg2 -y
+sudo apt install -y gnupg2
 
+# Crear carpeta y archivo de prueba
 mkdir ~/cifrado
 cd ~/cifrado
 echo "Este es un archivo confidencial para la práctica de GPG." > secreto.txt
 cat secreto.txt
 
+# Generar clave GPG (elige tipo, tamaño y correo como 20250845@itla.edu.do)
 gpg --full-generate-key
+
+# Ver llaves creadas
 gpg --list-keys
+
+# Cifrar archivo para el destinatario (correo de la llave)
 gpg -e -r 20250845@itla.edu.do secreto.txt
+
+# Ver archivo cifrado (binario)
 cat secreto.txt.gpg
+
+# Descifrar mostrando en pantalla
 gpg -d secreto.txt.gpg
+
+# Descifrar y guardar en un archivo
 gpg -o secretodes.txt -d secreto.txt.gpg
 cat secretodes.txt
